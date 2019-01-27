@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## Methods to generate sample data and evalaute a bootstrap method ##\n\nsource(\"PercentileMethods.R\")\nsource(\"PivotalMethods.R\")\n\nEvaluateBootstrapCI <- function(input.data, mean, GET.CI.FUNC = GetPercentileBootstrapCI, num.resamples = 999, alpha = 0.05) {\n  # Calculate the inclusion percentage of the true mean calculated from the given bootstrap method on the given data\n  # Args: input.data - matrix of input data in which each column represents one set of input data\n  #       mean - the true mean of the underlying distribution\n  #       num.resamples - number of bootstrap resamples to perform, constant at 999\n  #       alpha - the size of the confidence interval to be calculated is 1 - alpha\n  #               given as a decimal number, constant at 0.05\n  # Returns: inclusion percentage of the true mean using the given bootstrap method\n  num.sim <- dim(input.data)[2]\n  ci <- apply(input.data, 2, GET.CI.FUNC, num.resamples = num.resamples, alpha = alpha)\n  \n  IsInCi <- function(ci, mean) {\n    val <- ifelse(mean >= ci[1] && mean <= ci[2], 1, 0)\n    return(val)\n  }\n  \n  mean.in.ci <- apply(ci, 2, IsInCi, mean)\n  return(round(100 * sum(mean.in.ci)/num.sim, digits = 2))\n}\n\nGenerateEmpiricalInputData <- function(num.sim = 1000, data.source, sample.size = 10) {\n  # Generate the given number of data samples by resampling with replacement\n  # of the given size from the given data source.\n  # Args: num.sim - number of data samples to generate, constant at 1000\n  #       data.source - the pool of data to resample from that represents the empirical distribution\n  #       sample.size - the size of the sample to generate\n  # Returns: data - a matrix of size sample.size * num.sim in which each column represents one generated sample\n  #          mean - the true mean of the underlying empirical distribution\n  mean <- mean(data.source)\n  size <- length(data.source)\n  \n  data <- matrix(NA, sample.size, num.sim)\n  data <- replicate(num.sim - 1, sample(data.source, sample.size, replace = TRUE))\n  return(list(data = data, mean = mean)) \n}",
+    "created" : 1511348287793.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "796169901",
+    "id" : "4EA37F45",
+    "lastKnownWriteTime" : 1511347491,
+    "last_content_update" : 1511347491,
+    "path" : "~/git/MT4113A3-final/code/EvaluateBootstrapCI.R",
+    "project_path" : "EvaluateBootstrapCI.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

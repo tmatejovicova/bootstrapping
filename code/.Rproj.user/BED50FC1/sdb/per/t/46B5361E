@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#Set of functions students can use in MT4113 Assignemnt 3\n#Author: Len Thomas\n#Last updated: 19th Oct 2017\n\n#-----------------------------------------------------------------------------------\n\nget.zhat0<-function(est,boot.est){\n#Purpose: Return the bias correction factor, zhat0, in BCa bootstrap CI method\n#Inputs:\n# est - estimated quantity of interest from data\n# boot.est - vector of bootstrap estimates of quantity of interest\n  \n  prop.less<-sum(boot.est<est)/length(boot.est)\n  zhat<-qnorm(prop.less)\n  return(zhat)\n}\n\n#-----------------------------------------------------------------------------------\n\nget.ahat<-function(data){\n#Purpose: Return the acceleration factor, ahat, in BCa bootstrap CI method\n#Inputs:\n# data - vector of data\n      \n  #Check data vector length\n  n<-length(data)\n  if(n<2) stop(\"data vector must be at least length 2\\n\")\n\n  #Get jacknife estimates of quantity of interest\n  jack.est<-numeric(n)\n  for(i in 1:n){\n    jack.data<-data[-i]\n    jack.est[i]<-mean(jack.data)\n  }\n  \n  #Compute ahat\n  mean.jack.est<-mean(jack.est)\n  ahat.numerator<- sum((mean.jack.est-jack.est)^3)\n  ahat.denominator<-6*(sum((mean.jack.est-jack.est)^2))^1.5\n  ahat<-ahat.numerator/ahat.denominator\n  return(ahat)\n}\n\n#-----------------------------------------------------------------------------------\n",
+    "created" : 1511348283915.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1401603453",
+    "id" : "46B5361E",
+    "lastKnownWriteTime" : 1510936669,
+    "last_content_update" : 1510936669,
+    "path" : "~/git/MT4113A3-final/code/BCaHelperFunctions.r",
+    "project_path" : "BCaHelperFunctions.r",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

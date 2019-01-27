@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## Boostrap CI Methods from percentile family ##\n\nsource(\"BCaHelperFunctions.r\")\n\nGetPercentileBootstrapCI <- function(data, num.resamples = 999, alpha = 0.05) {\n  # Calculate bootstrap confidence interval using the percentile method\n  # Args: data - data sample to be used for resampling\n  #       num.resamples - number of bootstrap resamples to perform, constant at 999\n  #       alpha - the size of the confidence interval to be calculated is 1 - alpha\n  #               given as a decimal number, constant at 0.05\n  # Returns:ci - the calculated confidence interval\n\n  sample.size <- length(data)\n  resamples <- matrix(NA, nrow = sample.size, ncol = num.resamples + 1)\n  resamples[1:sample.size, 1:num.resamples] <- replicate(num.resamples, sample(data, sample.size, replace = TRUE))\n  resamples[, num.resamples + 1] <- data\n  means <- apply(resamples, 2, mean)\n  \n  ci <- as.numeric(quantile(means, probs = c(alpha/2, 1-alpha/2)))\n  return(ci)\n}\n\nGetBCaBootstrapCI <- function(data, num.resamples = 999, alpha = 0.05) {\n  # Calculate bootstrap confidence interval using the BCa method\n  # Args: data - data sample to be used for resampling\n  #       num.resamples - number of bootstrap resamples to perform, constant at 999\n  #       alpha - the size of the confidence interval to be calculated is 1 - alpha\n  #               given as a decimal number, constant at 0.05\n  # Returns:ci - the calculated confidence interval\n  \n  sample.size <- length(data)\n  resamples <- replicate(num.resamples, sample(data, sample.size, replace = TRUE))\n  means <- apply(resamples, 2, mean)\n  sample.mean <- mean(data)\n  \n  zhat0 <- get.zhat0(sample.mean, means)\n  ahat <- get.ahat(data)\n  \n  alpha.half <- alpha/2\n  alpha1 <- pnorm(zhat0 + (zhat0 + qnorm(alpha.half))/(1 - ahat * (zhat0 + qnorm(alpha.half))))\n  alpha2 <- pnorm(zhat0 + (zhat0 + qnorm(1 - alpha.half))/(1 - ahat * (zhat0 + qnorm(1 - alpha.half))))\n  \n  means <- c(means, sample.mean)\n  ci <- quantile(means, probs = c(alpha1, alpha2))\n  return(ci)  \n}",
+    "created" : 1511348293128.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2460597509",
+    "id" : "66639A8F",
+    "lastKnownWriteTime" : 1511347299,
+    "last_content_update" : 1511347299,
+    "path" : "~/git/MT4113A3-final/code/PercentileMethods.R",
+    "project_path" : "PercentileMethods.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
