@@ -13,3 +13,6 @@ Code is organised in the following files.
 - PercentileMethods.R - Helper functions for percentile methods
 - PivotalMethods.R - Helper functions for pivotal methods
 - EvaluateBootstrapCI.R - Methods to evaluate the bootstrapping result
+
+## Note
+See report.pdf for more information, analysis and conclusions.
